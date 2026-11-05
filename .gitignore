@@ -1,0 +1,7 @@
+/build/
+/deliverables/
+*.jks
+*.keystore
+*.p12
+*.idsig
+.env

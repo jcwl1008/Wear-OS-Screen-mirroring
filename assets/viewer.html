@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-HK">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wear Mirror</title>
+<style>
+  :root { color-scheme: dark; font: 16px system-ui,sans-serif; }
+  body { margin: 0; background: #0b0b10; color: #f1eeff; }
+  main { min-height: 100dvh; display: grid; place-items: center; }
+  img { width: min(92vw,86dvh); height: min(92vw,86dvh); object-fit: contain; border-radius: 50%; }
+  #status { text-align: center; padding: 1rem; }
+  button { position: fixed; bottom: 1rem; right: 1rem; border: 1px solid #6a6384; border-radius: 1rem; padding: .6rem 1rem; background: #201b32; color: inherit; }
+  :fullscreen button { display: none; }
+  [hidden] { display: none; }
+</style>
+<main>
+  <img id="watch" alt="手錶即時畫面" hidden>
+  <p id="status" role="status">等候手錶畫面…</p>
+  <button id="full" type="button">全螢幕</button>
+</main>
+<script>
+  const watch = document.querySelector('#watch');
+  const status = document.querySelector('#status');
+  const full = document.querySelector('#full');
+  let previous;
+  let received = false;
+  let failures = 0;
+  full.hidden = !document.fullscreenEnabled;
+  full.onclick = () => document.documentElement.requestFullscreen().catch(() => {});
+  async function poll() {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 1600);
+    try {
+      const response = await fetch('frame.jpg', { cache: 'no-store', signal: controller.signal });
+      if (!response.ok) throw new Error('Frame unavailable');
+      const next = URL.createObjectURL(await response.blob());
+      watch.src = next;
+      if (previous) URL.revokeObjectURL(previous);
+      previous = next;
+      watch.hidden = false;
+      status.hidden = true;
+      received = true;
+      failures = 0;
+    } catch {
+      if (++failures >= 3) {
+        watch.hidden = true;
+        status.hidden = false;
+        status.textContent = received ? '畫面中斷。正在重新連線…' : '等候畫面。請喚醒手錶並確認投影仍在執行。';
+      }
+    } finally {
+      clearTimeout(timeout);
+      setTimeout(poll, failures ? 500 : 100);
+    }
+  }
+  poll();
+</script>
+</html>
