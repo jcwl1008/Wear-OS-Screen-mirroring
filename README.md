@@ -4,6 +4,12 @@ Mirror your Wear OS watch to a browser on the same Wi-Fi network. Open the viewe
 
 [Download Wear Mirror v0.2 APK](downloads/WearMirror_v0.2.apk?raw=true)
 
+## Browser viewer screenshot
+
+![Wear Mirror browser viewer displaying a demo watch face, with a full-screen button](docs/screenshots/browser-viewer.webp)
+
+The browser viewer is shown with a demo watch face. 實際投影時，呢度會顯示手錶嘅即時畫面。
+
 ## 用 Android 手機安裝 APK 到手錶
 
 以下以 Galaxy Watch 同 AnExplorer 為例。手機端工具可用 [AnExplorer](https://anexplorer.io/install/apk-on-wear-os)、[Bugjaeger](https://sisik.eu/bugjaeger) 或 [Easy Fire Tools](https://play.google.com/store/apps/details?id=de.agondev.easyfiretools)。工具選單因版本而異。呢個方法透過手機 App 使用 **無線 ADB**，全程可以喺手機同手錶完成。
